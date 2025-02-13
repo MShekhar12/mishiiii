@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Memory Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffccd5;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background: #ff4d6d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .hidden {
+            background: #fff;
+            color: #fff;
+        }
+        .win-message {
+            display: none;
+            font-size: 3em;
+            color: #ff0000;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .love-message {
+            display: none;
+            font-size: 2em;
+            color: #ff4d6d;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>yadd h jab</h1>
+    <div class="game-board" id="game-board"></div>
+    <div class="win-message" id="win-message">❤ You Won! ❤</div>
+    <div class="love-message" id="love-message">sabash Badam khake ayi hai ❤</div>
+    <audio id="background-music" src="valentine.mp3" loop autoplay></audio>
+    <script>
+        const icons = ['img5.jpg', '💖', '💘', 'img4.jpg', 'img1.jpg', 'img2.jpg', 'img3.jpg','img7.jpg', '💑','img6.jpg'];
+        let cards = [...icons, ...icons];
+        let firstCard = null, secondCard = null;
+        let lockBoard = false;
+        let matchedPairs = 0;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function createBoard() {
+            const board = document.getElementById("game-board");
+            shuffle(cards);
+            cards.forEach(icon => {
+                const card = document.createElement("div");
+                card.classList.add("card", "hidden");
+                card.dataset.icon = icon;
+                card.addEventListener("click", flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard || this === firstCard) return;
+            
+            this.textContent = this.dataset.icon.includes('img') ? '' : this.dataset.icon;
+            if (this.dataset.icon.includes('img')) {
+                this.style.backgroundImage = `url(${this.dataset.icon})`;
+                this.style.backgroundSize = 'cover';
+            }
+            this.classList.remove("hidden");
+            
+            if (!firstCard) {
+                firstCard = this;
+                return;
+            }
+            
+            secondCard = this;
+            lockBoard = true;
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (firstCard.dataset.icon === secondCard.dataset.icon) {
+                matchedPairs++;
+                resetCards();
+                checkWin();
+            } else {
+                setTimeout(() => {
+                    firstCard.classList.add("hidden");
+                    secondCard.classList.add("hidden");
+                    firstCard.textContent = "";
+                    firstCard.style.backgroundImage = "";
+                    secondCard.textContent = "";
+                    secondCard.style.backgroundImage = "";
+                    resetCards();
+                }, 1000);
+            }
+        }
+
+        function resetCards() {
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+        }
+
+        function checkWin() {
+            if (matchedPairs === icons.length) {
+                document.getElementById("win-message").style.display = "block";
+                document.getElementById("love-message").style.display = "block";
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

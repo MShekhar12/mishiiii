@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine Forever?</title>
+    <style>
+        body {
+            font-family: Arial, Georgia, 'Times New Roman', Times, serif;
+            text-align: center;
+            background-color: #ffcccc;
+        }
+        .container {
+            margin-top: 100px;
+            position: relative;
+        }
+        h1 {
+            color: #d63384;
+        }
+        .btn {
+            font-size: 20px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .yes-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .no-btn {
+            background-color: #af1c1c;
+            color: black;
+            position: absolute;
+            z-index: 10;
+        }
+        .hidden {
+            display: none;
+        }
+        .kitty { 
+            width: 150px;
+            position: absolute;
+            bottom: 20px;
+            animation: dance 1s infinite alternate;
+        }
+        .kitty.left {
+            left: 20px;
+        }
+        .kitty.right {
+            right: 20px;
+        }
+        @keyframes dance {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(10deg); }
+        }
+        .bottom-image {
+            width: 200px;
+            height: 200px;
+            margin-top: 150px;
+        }
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        .music-player button {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .click-message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #d63384;
+            font-weight: bold;
+            z-index: 100;
+        }
+        .message {
+            position: absolute;
+            top: 150%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #100108;
+            font-weight: normal;
+            visibility: hidden;
+            z-index: 9999; /* Highest Z-index */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="HK.svg" alt="Dancing Hello Kitty" class="kitty left">
+        <h1>Will you be my Valentine forever? ❤️</h1>
+        <img src="HK.svg" alt="Dancing Hello Kitty" class="kitty right">
+        <button class="btn yes-btn" onclick="openBookPage()">Yes</button>
+        <button class="btn no-btn" onmouseover="moveNoButton()">No</button>
+        <p id="message" class="message">&nbsp;</p>
+    </div>
+
+    <img id="bottomImage" src="image1.jpg" alt="Changing Image" class="bottom-image">
+    
+    <!-- Music Player -->
+    <div class="music-player">
+        <button id="musicButton" onclick="toggleMusic()">Play Song 🎵</button>
+        <audio id="valentineSong" loop>
+            <source src="valentineSong.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    
+    <script>
+        
+        let messageIndex = 0;
+        const messages = [
+            "Badmashi kregi", 
+            "Pitogi tum", 
+            "Tumhe Hello Kitty ki kasam", 
+            "Sochle ache se", 
+            "Mishu orphan ho jayega",
+            "Ab hogya mazak Bas",
+            "bye",
+            "Pleaseeeee"
+        ];
+        let lastMessageShown = false;
+        const images = ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg", "image4.jpg", "image4.jpg", "image4.jpg", "image4.jpg", "image5.jpg"];
+        let imageIndex = 0;
+        
+        function moveNoButton() {
+            let noButton = document.querySelector('.no-btn');
+            let messageElement = document.getElementById('message');
+
+            if (lastMessageShown) {
+                closeWebsite();
+                return;
+            }
+
+            let x = Math.random() * (window.innerWidth - 100);
+            let y = Math.random() * (window.innerHeight - 50);
+            noButton.style.left = `${x}px`;
+            noButton.style.top = `${y}px`;
+
+            messageElement.textContent = messages[messageIndex];
+            messageElement.style.visibility = 'visible';
+
+            if (messages[messageIndex] === "Pleaseeeee") {
+                lastMessageShown = true;
+            }
+
+            messageIndex = (messageIndex + 1) % messages.length;
+            imageIndex = (imageIndex + 1) % images.length;
+            bottomImage.src = images[imageIndex];
+        }
+
+        function closeWebsite() {
+            alert("Okay, you chose this! Bye 😢");
+            window.close();
+        }
+        function openBookPage() {
+            window.location.href = "book.html";
+        }
+        // Music Player Functionality
+        const audio = document.getElementById('valentineSong');
+        const musicButton = document.getElementById('musicButton');
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicButton.textContent = "Pause Song 🎵";
+            } else {
+                audio.pause();
+                musicButton.textContent = "Play Song 🎵";
+            }
+        }
+    </script>
+</body>
+</html>
